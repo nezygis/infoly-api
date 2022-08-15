@@ -1,0 +1,17 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/infoly
+
+  mongodb:
+    embedded:
+      version: 5.0.2
+resilience4j.ratelimiter:
+  instances:
+    itunesService:
+      limitForPeriod: 100
+      limitRefreshPeriod: 1h
+      timeoutDuration: 0
+itunes:
+  api:
+    url: https://itunes.apple.com
