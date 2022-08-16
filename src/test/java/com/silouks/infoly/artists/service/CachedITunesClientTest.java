@@ -16,19 +16,19 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.util.List;
 
-import static com.silouks.infoly.artists.service.ITunesService.ALBUM_WRAPPER_TYPE;
+import static com.silouks.infoly.artists.service.ITunesClient.ALBUM_WRAPPER_TYPE;
 
 @SpringBootTest()
-public class CachedITunesServiceTest {
+public class CachedITunesClientTest {
     private MockWebServer mockWebServer;
-    private CachedITunesService cachedITunesService;
+    private CachedITunesClient cachedITunesClient;
 
     @BeforeEach
     public void setup() throws IOException {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
         String baseUrl = "http://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort() + "/";
-        cachedITunesService = new CachedITunesService(new ITunesService(WebClient.builder().baseUrl(baseUrl).build()));
+        cachedITunesClient = new CachedITunesClient(new ITunesClient(WebClient.builder().baseUrl(baseUrl).build()));
     }
 
     @AfterEach
@@ -52,7 +52,7 @@ public class CachedITunesServiceTest {
         );
 
         for (int i = 0; i < 5; i++) {
-            var response = cachedITunesService.lookUpArtist(123).block();
+            var response = cachedITunesClient.lookUpArtist(123).block();
             Assertions.assertNotNull(response);
             Assertions.assertEquals(1, response.getResults().size());
             Assertions.assertEquals(ALBUM_WRAPPER_TYPE, response.getResults().get(0).getWrapperType());
@@ -77,7 +77,7 @@ public class CachedITunesServiceTest {
         );
 
         for (int i = 0; i < 5; i++) {
-            var response = cachedITunesService.searchForArtists("Queen").block();
+            var response = cachedITunesClient.searchForArtists("Queen").block();
             Assertions.assertNotNull(response);
             Assertions.assertEquals(2, response.getResults().size());
             Assertions.assertEquals("Queen", response.getResults().get(0).getArtistName());
@@ -113,12 +113,12 @@ public class CachedITunesServiceTest {
         );
 
         for (int i = 0; i < 5; i++) {
-            var response = cachedITunesService.searchForArtists("Queen").block();
+            var response = cachedITunesClient.searchForArtists("Queen").block();
             Assertions.assertNotNull(response);
             Assertions.assertEquals(1, response.getResults().size());
             Assertions.assertEquals("Queen", response.getResults().get(0).getArtistName());
 
-            response = cachedITunesService.searchForArtists("King Crimson").block();
+            response = cachedITunesClient.searchForArtists("King Crimson").block();
             Assertions.assertNotNull(response);
             Assertions.assertEquals(1, response.getResults().size());
             Assertions.assertEquals("King Crimson", response.getResults().get(0).getArtistName());

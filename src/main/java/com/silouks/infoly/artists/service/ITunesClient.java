@@ -10,17 +10,17 @@ import reactor.core.publisher.Mono;
 import java.util.Objects;
 
 @Service
-public class ITunesService {
+public class ITunesClient {
 
     public static final String ALBUM_WRAPPER_TYPE = "collection";
 
     private final WebClient ITunesWebClient;
 
-    public ITunesService(WebClient iTunesWebClient) {
+    public ITunesClient(WebClient iTunesWebClient) {
         ITunesWebClient = iTunesWebClient;
     }
 
-    @RateLimiter(name="itunesService")
+    @RateLimiter(name="itunesClient")
     public Mono<ArtistSearchDTO> searchForArtists(String term) {
         return this.ITunesWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/search")
@@ -31,7 +31,7 @@ public class ITunesService {
                 .bodyToMono(ArtistSearchDTO.class);
     }
 
-    @RateLimiter(name="itunesService")
+    @RateLimiter(name="itunesClient")
     public Mono<ArtistLookupDTO> lookUpArtist(int amgArtistId) {
         return this.ITunesWebClient.post()
                 .uri(uriBuilder -> uriBuilder.path("/lookup")

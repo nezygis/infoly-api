@@ -8,10 +8,11 @@ spring:
       version: 5.0.2
 resilience4j.ratelimiter:
   instances:
-    itunesService:
+    itunesClient:
       limitForPeriod: 100
       limitRefreshPeriod: 1h
       timeoutDuration: 0
 itunes:
   api:
     url: https://itunes.apple.com
+    cache-ttl-hours: 6

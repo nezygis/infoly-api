@@ -22,8 +22,8 @@ public class ArtistsHandlerTest {
         mockWebServer = new MockWebServer();
         mockWebServer.start();
         String baseUrl = "http://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort() + "/";
-        var iTunesService = new ITunesService(WebClient.builder().baseUrl(baseUrl).build());
-        var cachedITunesService = new CachedITunesService(iTunesService);
+        var iTunesService = new ITunesClient(WebClient.builder().baseUrl(baseUrl).build());
+        var cachedITunesService = new CachedITunesClient(iTunesService);
         artistsHandler = new ArtistsHandler(cachedITunesService);
     }
 

@@ -11,7 +11,7 @@ import java.time.Duration;
 import java.util.Optional;
 
 @Service
-public class CachedITunesService {
+public class CachedITunesClient {
 
     private final Cache<String, ArtistSearchDTO>
             ARTIST_SEARCH_CACHE = Caffeine.newBuilder()
@@ -24,21 +24,21 @@ public class CachedITunesService {
             .expireAfterWrite(Duration.ofHours(6))
             .maximumSize(1_000)
             .build();
-    private final ITunesService iTunesService;
+    private final ITunesClient iTunesClient;
 
-    public CachedITunesService(ITunesService iTunesService) {
-        this.iTunesService = iTunesService;
+    public CachedITunesClient(ITunesClient iTunesClient) {
+        this.iTunesClient = iTunesClient;
     }
 
     public Mono<ArtistSearchDTO> searchForArtists(String term) {
         Optional<ArtistSearchDTO> artistSearchDTO = Optional.ofNullable(ARTIST_SEARCH_CACHE.getIfPresent(term));
-        return artistSearchDTO.map(Mono::just).orElseGet(() -> this.iTunesService.searchForArtists(term)
+        return artistSearchDTO.map(Mono::just).orElseGet(() -> this.iTunesClient.searchForArtists(term)
                 .doOnNext(updatedArtistSearchDTO -> ARTIST_SEARCH_CACHE.put(term, updatedArtistSearchDTO)));
     }
 
     public Mono<ArtistLookupDTO> lookUpArtist(int artistId) {
         Optional<ArtistLookupDTO> artistLookupDTO = Optional.ofNullable(ARTIST_LOOKUP_CACHE.getIfPresent(artistId));
-        return artistLookupDTO.map(Mono::just).orElseGet(() -> this.iTunesService.lookUpArtist(artistId)
+        return artistLookupDTO.map(Mono::just).orElseGet(() -> this.iTunesClient.lookUpArtist(artistId)
                 .doOnNext(updatedArtistLookupDTO -> ARTIST_LOOKUP_CACHE.put(artistId, updatedArtistLookupDTO)));
     }
 }

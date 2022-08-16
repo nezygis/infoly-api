@@ -13,10 +13,10 @@ import java.util.Optional;
 
 @Component
 public class ArtistsHandler {
-    private final CachedITunesService iTunesService;
+    private final CachedITunesClient iTunesClient;
 
-    public ArtistsHandler(CachedITunesService iTunesService) {
-        this.iTunesService = iTunesService;
+    public ArtistsHandler(CachedITunesClient iTunesClient) {
+        this.iTunesClient = iTunesClient;
     }
 
     public Mono<ServerResponse> searchArtists(ServerRequest request) {
@@ -24,7 +24,7 @@ public class ArtistsHandler {
         if (term.isEmpty()) {
             return ServerResponse.badRequest().build();
         }
-        return iTunesService.searchForArtists(term.get())
+        return iTunesClient.searchForArtists(term.get())
                 .flatMap(searchArtistDTO -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(searchArtistDTO)))
                 .onErrorResume(this::handleError);
@@ -39,7 +39,7 @@ public class ArtistsHandler {
         } catch (IllegalArgumentException e) {
             return ServerResponse.badRequest().build();
         }
-        return iTunesService.lookUpArtist(amgArtistId)
+        return iTunesClient.lookUpArtist(amgArtistId)
                 .flatMap(artistLookupDTO -> ServerResponse.ok().contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(artistLookupDTO)))
                 .onErrorResume(this::handleError);

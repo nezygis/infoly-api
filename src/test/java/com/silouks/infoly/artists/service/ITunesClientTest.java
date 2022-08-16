@@ -14,18 +14,18 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.io.IOException;
 import java.util.List;
 
-import static com.silouks.infoly.artists.service.ITunesService.ALBUM_WRAPPER_TYPE;
+import static com.silouks.infoly.artists.service.ITunesClient.ALBUM_WRAPPER_TYPE;
 
 @SpringBootTest()
-public class ITunesServiceTest {
+public class ITunesClientTest {
     private MockWebServer mockWebServer;
-    private ITunesService iTunesService;
+    private ITunesClient iTunesClient;
 
     @BeforeEach
     public void setup() {
         mockWebServer = new MockWebServer();
         String baseUrl = "http://" + mockWebServer.getHostName() + ":" + mockWebServer.getPort() + "/";
-        iTunesService = new ITunesService(WebClient.builder().baseUrl(baseUrl).build());
+        iTunesClient = new ITunesClient(WebClient.builder().baseUrl(baseUrl).build());
     }
 
     @AfterEach
@@ -48,7 +48,7 @@ public class ITunesServiceTest {
                 .addHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
         );
 
-        var response = iTunesService.lookUpArtist(123).block();
+        var response = iTunesClient.lookUpArtist(123).block();
         Assertions.assertNotNull(response);
         Assertions.assertEquals(1, response.getResults().size());
     }

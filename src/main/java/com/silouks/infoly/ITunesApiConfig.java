@@ -15,7 +15,7 @@ import reactor.netty.http.client.HttpClient;
 public class ITunesApiConfig {
 
     @Value("${itunes.api.url}")
-    private String iTunesApiUrl;
+    public String iTunesApiUrl;
 
     @Bean
     public WebClient iTunesWebClient() {

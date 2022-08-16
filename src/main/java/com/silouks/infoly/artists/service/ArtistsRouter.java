@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 
 import static org.springframework.web.reactive.function.server.RequestPredicates.*;
 
-@Configuration(proxyBeanMethods = false)
+@Configuration
 public class ArtistsRouter {
 
     @Bean
